@@ -24,4 +24,5 @@ const deleteProductById = (req, res)=>{
     res.json(contenedorProducts.deleteById(Number(req.params.id)));
 }
 
+
 module.exports = {contenedorProducts, getAllProducts, getProductById, postProduct, putProduct, deleteProductById}

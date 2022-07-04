@@ -31,7 +31,7 @@ class ContenedorProducts {
         } catch (err) {
             console.log("Error guardando objeto en el fs. Code: ", err);
         }
-    }  
+    }
 
     /* actualiza producto en contenedor productos */
     async saveById(id, objeto) {
@@ -78,7 +78,7 @@ class ContenedorProducts {
                 await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
             } catch (err) {
                 if (err.code === 'ENOENT') {
-                    await fs.promises.writeFile("./deletedProducts.txt.txt", JSON.stringify([removedItem]));
+                    await fs.promises.writeFile(this.deletedFile, JSON.stringify([removedItem]));
                 } else {
                     console.log("Error eliminando por ID. Code: ", err)
                 }
@@ -87,6 +87,28 @@ class ContenedorProducts {
         } else {
             return { error: `No se encontró el producto con ID ${id}` }
         }
+    }
+
+    /* eliminar productos del contenedor productos*/
+    async deleteAll() {
+        const removedItem = this.products;
+        const removedItems = [];
+        this.products = [];
+
+        try {
+            removedItems = JSON.parse(await fs.promises.readFile(this.deleted, "utf-8"))
+            removedItems.push(removedItem);
+            await fs.promises.writeFile(this.deleted, JSON.stringify([removedItems]));
+            await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
+        } catch (err) {
+            if (err.code === 'ENOENT') {
+                await fs.promises.writeFile(this.deletedFile, JSON.stringify([removedItem]));
+            } else {
+                console.log("Error eliminando por ID. Code: ", err)
+            }
+        }
+        return { success: `Producto con ID ${id} eliminado` }
+
     }
 
     /* init - carga productos del archivo */

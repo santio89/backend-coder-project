@@ -48,5 +48,16 @@ const deleteProductByCartId = (req, res)=>{
     }
 }
 
+/* empty cart */
+const emptyByCartId = (req, res)=>{
+    const index = contenedorCarts.products.findIndex(producto => producto.id === req.params.id)
+
+    if (index != -1) {
+        res.json(contenedorCarts.products[index].deleteAll())
+    } else {
+        res.json({error: `No se encontró el cart con ID ${id}`})
+    }
+}
+
 
 module.exports = {contenedorCarts, getAllProductsByCartId, postProductByCartId, postCart, deleteCartById, deleteProductByCartId}
