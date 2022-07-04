@@ -1,6 +1,6 @@
 /* contenedor principal de productos */
-const Contenedor = require("../ContenedorProducts");
-const contenedorProducts = new Contenedor("./productos.txt");
+const Contenedor = require("../Contenedor");
+const contenedorProducts = new Contenedor("./products.txt", "./productIds.txt", "./deletedProducts.txt");
 contenedorProducts.init();
 
 

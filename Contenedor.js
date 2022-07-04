@@ -1,72 +1,81 @@
 const fs = require("fs");
 
 class ContenedorProducts {
-    constructor(archivo) {
-        this.archivo = archivo
-        this.productos = [];
-        this.ids = [];
+    constructor(productsFile, idsFile, deletedFile) {
+        this.productsFile = productsFile;
+        this.productIdsFile = idsFile;
+        this.deleted = deletedFile;
+        this.products = [];
+        this.productIds = [];
     }
 
+    /* guarda producto en contenedor productos, o guarda cart en contenedor carts */
     async save(objeto) {
+        objeto.timestamp = Date.now();
         try {
             /* busco id en archivo */
-            if (this.ids.length === 0) {
-                this.ids.push(1);
+            if (this.productIds.length === 0) {
+                this.productIds.push(1);
                 objeto.id = 1;
             } else {
-                this.ids.push(this.ids[this.ids.length - 1] + 1);
-                objeto.id = this.ids[this.ids.length - 1];
+                this.productIds.push(this.productIds[this.productIds.length - 1] + 1);
+                objeto.id = this.productIds[this.productIds.length - 1];
             }
 
-            await fs.promises.writeFile("./productIds.txt", JSON.stringify(this.ids));
-            this.productos.push(objeto)
-            await fs.promises.writeFile(this.archivo, JSON.stringify(this.productos))
+            await fs.promises.writeFile(this.productIdsFile, JSON.stringify(this.productIds));
+            this.products.push(objeto)
+            await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
             console.log("Producto cargado");
 
             return objeto;
         } catch (err) {
             console.log("Error guardando objeto en el fs. Code: ", err);
         }
-    }
+    }  
 
+    /* actualiza producto en contenedor productos */
     async saveById(id, objeto) {
-        const index = this.productos.findIndex(producto => producto.id === id)
+        const index = this.products.findIndex(producto => producto.id === id)
         if (index != -1) {
+            objeto.timestamp = Date.now();
             objeto.id = id;
-            this.productos[index] = objeto;
+            this.products[index] = objeto;
 
             try {
-                await fs.promises.writeFile(this.archivo, JSON.stringify(this.productos));
+                await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
             } catch (err) {
                 console.log("Error guardando producto por ID. Code: ", err)
             }
 
-            return this.productos[index];
+            return this.products[index];
         } else {
             return { error: `No se encontró el producto con ID ${id}` }
         }
     }
 
+    /* retorna producto del contenedor productos, o retorna cart del contenedor carts */
     getById(id) {
-        const objeto = this.productos.find(producto => producto.id === id);
+        const objeto = this.products.find(producto => producto.id === id);
         return (objeto ? objeto : { error: `No se encontró el producto con ID ${id}` });
     }
 
+    /* retorna todos los productos del contenedor productos */
     getAll() {
-        return (this.productos);
+        return (this.products);
     }
 
+    /* eliminar un producto del contenedor productos, elimina un cart del contenedor carts */
     async deleteById(id) {
-        const index = this.productos.findIndex(producto => producto.id === id)
+        const index = this.products.findIndex(producto => producto.id === id)
         if (index != -1) {
-            const removedItem = this.productos.splice(index, 1);
+            const removedItem = this.products.splice(index, 1);
             const removedItems = []
 
             try {
-                removedItems = JSON.parse(await fs.promises.readFile("./deletedProducts.txt", "utf-8"))
+                removedItems = JSON.parse(await fs.promises.readFile(this.deleted, "utf-8"))
                 removedItems.push(removedItem);
-                await fs.promises.writeFile("./deletedProducts.txt", JSON.stringify([removedItems]));
-                await fs.promises.writeFile(this.archivo, JSON.stringify(this.productos))
+                await fs.promises.writeFile(this.deleted, JSON.stringify([removedItems]));
+                await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
             } catch (err) {
                 if (err.code === 'ENOENT') {
                     await fs.promises.writeFile("./deletedProducts.txt.txt", JSON.stringify([removedItem]));
@@ -83,8 +92,8 @@ class ContenedorProducts {
     /* init - carga productos del archivo */
     async init() {
         try {
-            this.productos = JSON.parse(await fs.promises.readFile(this.archivo, "utf-8"));
-            this.ids = JSON.parse(await fs.promises.readFile("./productIds.txt", "utf-8"));
+            this.products = JSON.parse(await fs.promises.readFile(this.productsFile, "utf-8"));
+            this.productIds = JSON.parse(await fs.promises.readFile(this.productIdsFile, "utf-8"));
 
             /*  CARGO ALGUNOS PRODUCTOS MANUAL, UNICA VEZ        
                     await this.save({ title: "Trainspotting", price: 20, thumbnail: "https://www.ocimagazine.es/wp-content/uploads/2021/06/trainspotting-cartel.jpg" })

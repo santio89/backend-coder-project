@@ -1,6 +1,6 @@
 const express = require("express");
 const apiProductRoutes = require("./routes/apiProductRoutes")
-/* const apiCartRoutes = require("./routes/apiCartRoutes") */
+const apiCartRoutes = require("./routes/apiCartRoutes")
 require('dotenv').config()
 const port = process.env.PORT || 8080;
 const app = express();
@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }))
 
 /* routes main */
 app.use("/api/productos", apiProductRoutes)
-/* app.use("/api/carrito", apiCartRoutes) */
+app.use("/api/carrito", apiCartRoutes)
 
 /* not found */
 app.use((req, res) => {
