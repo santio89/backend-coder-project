@@ -9,8 +9,19 @@ const postCart = async (req, res) => {
     res.json(await contenedorCarts.save({ objType: "cart" }))
 }
 
+/* empty cart */
+const emptyByCartId = async (req, res) => {
+    const index = contenedorCarts.products.findIndex(producto => producto.id == req.params.id)
+    if (index != -1) {
+        await contenedorCarts.emptyCartById(index, req.params.id);
+    } else {
+        res.json({ error: `No se encontró el cart con ID ${req.params.id}` })
+    }
+}
+
 /* delete cart */
 const deleteCartById = async (req, res) => {
+    await emptyByCartId(req, res);
     res.json(await contenedorCarts.deleteById(Number(req.params.id)));
 }
 
@@ -46,17 +57,6 @@ const deleteProductByCartId = async (req, res) => {
 
     if (index != -1) {
         res.json(await contenedorCarts.deleteByCartId(index, req.params.id_prod, req.params.id))
-    } else {
-        res.json({ error: `No se encontró el cart con ID ${id}` })
-    }
-}
-
-/* empty cart */
-const emptyByCartId = async (req, res) => {
-    const index = contenedorCarts.products.findIndex(producto => producto.id == req.params.id)
-
-    if (index != -1) {
-        res.json(await contenedorCarts.products[index].deleteAll())
     } else {
         res.json({ error: `No se encontró el cart con ID ${id}` })
     }

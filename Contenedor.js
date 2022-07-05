@@ -111,22 +111,25 @@ class ContenedorProducts {
         return { success: `Producto con ID ${id} eliminado` }
     }
 
+    /* retorna todos los productos del carro */
     getAllByCartId(index){
         return(this.products[index].cartList)
     }
 
+    /* guarda producto en carro */
     async saveByCartId(index, product){
         this.products[index].cartList.push(product);
         
         try{
             await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
             return product
-        } catch{
-            console.log("Error guardando producto en carrito")
+        } catch(err){
+            console.log("Error guardando producto en carrito: ", err)
         }
         
     }
 
+    /* elimina producto de carro */
     async deleteByCartId(indexCart, id, cartId){
         const index = this.products[indexCart].cartList.findIndex(producto=>producto.id == id);
         
@@ -135,8 +138,8 @@ class ContenedorProducts {
             try{
                 await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
                 return {success: `Producto de ID ${id} eliminado del carrito de ID ${cartId}` }
-            } catch{
-                console.log("Error eliminando producto de carrito")
+            } catch(err){
+                console.log("Error eliminando producto de carrito: ",err)
             }
         } else{
             return {error: `Producto de ID ${id} no encontrado en el carrito de ID ${cartId}`}
@@ -144,10 +147,23 @@ class ContenedorProducts {
         try{
             await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
             return product
-        } catch{
-            console.log("Error guardando producto en carrito")
+        } catch(err){
+            console.log("Error guardando producto en carrito: ", err)
         }
         
+    }
+
+    async emptyCartById(index, id){
+        /* aqui podria hacer un loop for del cartList para retornar el stock, antes de vaciar el array */
+        this.products[index].cartList = []
+
+        try{
+            await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
+            
+            return {success: `Carrito de id ${id} vaciado` }
+        } catch(err){
+            console.log("Error vaciando carrito, ", err)
+        }
     }
 
     /* init - carga productos del archivo */
