@@ -1,12 +1,13 @@
 const fs = require("fs");
 
 class ContenedorProducts {
-    constructor(productsFile, idsFile, deletedFile) {
+    constructor(productsFile, idsFile, deletedFile, type) {
         this.productsFile = productsFile;
         this.productIdsFile = idsFile;
         this.deleted = deletedFile;
         this.products = [];
         this.productIds = [];
+        this.type = type;
     }
 
     /* guarda producto en contenedor productos, o guarda cart en contenedor carts */
@@ -30,7 +31,7 @@ class ContenedorProducts {
            
             return objeto;
         } catch (err) {
-            console.log("Error guardando objeto en el fs. Code: ", err);
+            console.log("Error guardando producto. Code: ", err);
         }
     }
 
@@ -84,9 +85,9 @@ class ContenedorProducts {
                     console.log("Error eliminando por ID. Code: ", err)
                 }
             }
-            return { success: `Producto con ID ${id} eliminado` }
+            return { success: `${this.type} con ID ${id} eliminado` }
         } else {
-            return { error: `No se encontró el producto con ID ${id}` }
+            return { error: `No se encontró el ${this.type} con ID ${id}` }
         }
     }
 
