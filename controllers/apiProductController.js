@@ -1,15 +1,25 @@
 /* contenedor principal de productos */
 const Contenedor = require("../Contenedor");
-const contenedorProducts = new Contenedor("./products.txt", "./productIds.txt", "./deletedProducts.txt");
+const contenedorProducts = new Contenedor("./db/products.txt", "./db/productIds.txt", "./db/deletedProducts.txt");
 contenedorProducts.init("Productos");
 
+/* 
+FORMATO DE PRODUCTO 
+{id, timestamp, nombre, descripcion, codigo, url, precio, stock}
+id y timestamp se agregan en el servidor (no mandar en post)
+*/
 
 const getAllProducts = (req, res)=>{
     res.json(contenedorProducts.getAll());
 }
 
 const getProductById = (req, res)=>{
-    res.json(contenedorProducts.getById(Number(req.params.id)));
+    if (req.params.id){
+        res.json(contenedorProducts.getById(Number(req.params.id)));
+    } else{
+        getAllProducts(req, res);
+    }
+    
 }
 
 const postProduct = async (req, res)=>{

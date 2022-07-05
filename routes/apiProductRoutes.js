@@ -1,19 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const {getAllProducts, getProductById, postProduct, putProduct, deleteProductById} = require("../controllers/apiProductController");
-const ADMIN = true;
+const checkAdminUtil = require("../utils/checkAdmin")
 
-const checkAdmin = (req,res,next)=>{
-    if (ADMIN === true){
-        next();
-    } else{
-        res.json({error: -1, descripcion: `Ruta '${req.route.path}' Método '${req.route.stack[0].method}' - No Autorizada`})
-    }
-}
+const ADMIN = true;
+const checkAdmin = checkAdminUtil(ADMIN);
 
 /* ruteo */
-router.get("/", getAllProducts)
-router.get("/:id", getProductById)
+/* id? -> si existe id, busca id. si no existe id, busca todos */
+router.get("/:id?", getProductById) 
 router.post("/", checkAdmin, postProduct)
 router.put("/:id", checkAdmin, putProduct)
 router.delete("/:id", checkAdmin, deleteProductById)

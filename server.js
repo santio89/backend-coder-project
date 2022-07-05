@@ -15,7 +15,7 @@ app.use("/api/carrito", apiCartRoutes)
 
 /* not found */
 app.use((req, res) => {
-    res.status(404).json({error404: "Ruta no encontrada"});
+    res.status(404).json({error: -2, descripcion: `Ruta '${req.route.path}' Método '${req.route.stack[0].method}' - No Implementada`});
 })
 
 // error handler

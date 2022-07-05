@@ -1,6 +1,6 @@
 /* contenedor principal de productos */
 const Contenedor = require("../Contenedor");
-const contenedorCarts = new Contenedor("./carts.txt", "./cartIds.txt", "./deletedCarts.txt");
+const contenedorCarts = new Contenedor("./db/carts.txt", "./db/cartIds.txt", "./db/deletedCarts.txt");
 const {contenedorProducts} = require("./apiProductController")
 contenedorCarts.init("Carritos");
 
