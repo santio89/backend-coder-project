@@ -51,14 +51,14 @@ class ContenedorProducts {
 
             return this.products[index];
         } else {
-            return { error: `No se encontró el producto con ID ${id}` }
+            return { error: `Producto con ID ${id} no encontrado` }
         }
     }
 
     /* retorna producto del contenedor productos, o retorna cart del contenedor carts */
     getById(id) {
         const objeto = this.products.find(producto => producto.id === id);
-        return (objeto ? objeto : { error: `No se encontró el producto con ID ${id}` });
+        return (objeto ? objeto : { error: `Producto con ID ${id} no encontrado` });
     }
 
     /* retorna todos los productos del contenedor productos */
@@ -87,7 +87,7 @@ class ContenedorProducts {
             }
             return { success: `${this.type} con ID ${id} eliminado` }
         } else {
-            return { error: `No se encontró el ${this.type} con ID ${id}` }
+            return { error: `${this.type} con ID ${id} no encontrado` }
         }
     }
 
