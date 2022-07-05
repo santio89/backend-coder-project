@@ -12,6 +12,7 @@ class ContenedorProducts {
     /* guarda producto en contenedor productos, o guarda cart en contenedor carts */
     async save(objeto) {
         objeto.timestamp = Date.now();
+        objeto.objType?objeto.cartList=[]:[];
         try {
             /* busco id en archivo */
             if (this.productIds.length === 0) {
@@ -26,7 +27,7 @@ class ContenedorProducts {
             this.products.push(objeto)
             await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
             console.log("Producto cargado");
-
+           
             return objeto;
         } catch (err) {
             console.log("Error guardando objeto en el fs. Code: ", err);
@@ -68,13 +69,13 @@ class ContenedorProducts {
     async deleteById(id) {
         const index = this.products.findIndex(producto => producto.id === id)
         if (index != -1) {
-            const removedItem = this.products.splice(index, 1);
-            const removedItems = []
+            const removedItem = this.products.splice(index, 1)[0];
+            let removedItems = []
 
             try {
                 removedItems = JSON.parse(await fs.promises.readFile(this.deleted, "utf-8"))
                 removedItems.push(removedItem);
-                await fs.promises.writeFile(this.deleted, JSON.stringify([removedItems]));
+                await fs.promises.writeFile(this.deleted, JSON.stringify(removedItems));
                 await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
             } catch (err) {
                 if (err.code === 'ENOENT') {
@@ -108,21 +109,54 @@ class ContenedorProducts {
             }
         }
         return { success: `Producto con ID ${id} eliminado` }
+    }
 
+    getAllByCartId(index){
+        return(this.products[index].cartList)
+    }
+
+    async saveByCartId(index, product){
+        this.products[index].cartList.push(product);
+        
+        try{
+            await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
+            return product
+        } catch{
+            console.log("Error guardando producto en carrito")
+        }
+        
+    }
+
+    async deleteByCartId(indexCart, id, cartId){
+        const index = this.products[indexCart].cartList.findIndex(producto=>producto.id == id);
+        
+        if (index != -1){
+            this.products[indexCart].cartList.splice(index, 1);
+            try{
+                await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
+                return {success: `Producto de ID ${id} eliminado del carrito de ID ${cartId}` }
+            } catch{
+                console.log("Error eliminando producto de carrito")
+            }
+        } else{
+            return {error: `Producto de ID ${id} no encontrado en el carrito de ID ${cartId}`}
+        }
+        try{
+            await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
+            return product
+        } catch{
+            console.log("Error guardando producto en carrito")
+        }
+        
     }
 
     /* init - carga productos del archivo */
-    async init() {
+    async init(items) {
         try {
             this.products = JSON.parse(await fs.promises.readFile(this.productsFile, "utf-8"));
             this.productIds = JSON.parse(await fs.promises.readFile(this.productIdsFile, "utf-8"));
 
-            /*  CARGO ALGUNOS PRODUCTOS MANUAL, UNICA VEZ        
-                    await this.save({ title: "Trainspotting", price: 20, thumbnail: "https://www.ocimagazine.es/wp-content/uploads/2021/06/trainspotting-cartel.jpg" })
-                    await this.save({ title: "2001: A Space Odyssey", price: 15, thumbnail: "https://upload.wikimedia.org/wikipedia/en/thumb/1/11/2001_A_Space_Odyssey_%281968%29.png/220px-2001_A_Space_Odyssey_%281968%29.png" })
-                    await this.save({ title: "Friday de 13th I", price: 12, thumbnail: "https://horrornews.net/wp-content/uploads/2018/11/friday-the-13th-movie-poster-1980.jpg" }) */
-
-            console.log("Productos cargados");
+            console.log(`${items} cargados`);
         } catch (err) {
             console.log("Error cargando productos. Code: ", err);
         }
