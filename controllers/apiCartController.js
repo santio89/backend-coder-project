@@ -42,7 +42,7 @@ const postProductByCartId = async (req, res) => {
     if (index != -1) {
         const product = contenedorProducts.getById(req.body.productId);
         if (product.error){
-            res.json(product)
+            res.status(400).json(product)
         } else{
             res.json(await contenedorCarts.saveByCartId(index, product))
         }

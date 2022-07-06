@@ -175,7 +175,7 @@ class ContenedorProducts {
 
             console.log(`${items} cargados`);
         } catch (err) {
-            console.log("Error cargando productos. Code: ", err);
+            console.log(`Error cargando ${items}. Code: `, err);
         }
     }
 }
