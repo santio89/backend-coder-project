@@ -159,6 +159,7 @@ class ContenedorMongo {
         
     }
 
+    /* vacia carro */
     async emptyCartById(id) {
         try {
             const cart = await this.getById(id);
