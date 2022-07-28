@@ -34,8 +34,8 @@ switch (process.env.DATABASE.toUpperCase()) {
 
   case 'FS':
     const { default: ContenedorFS } = await import("../contenedores/ContenedorFS.js")
-    ProductoDao = new ContenedorFS("./other-dbs/fs-db/products.json", "./other-dbs/fs-db/productIds.json", "./other-dbs/fs-db/deletedProducts.json", "producto");
-    CarritoDao = new ContenedorFS("./other-dbs/fs-db/carts.json", "./other-dbs/fs-db/cartIds.json", "./other-dbs/fs-db/deletedCarts.json", "carrito");
+    ProductoDao = new ContenedorFS("./src/other-dbs/fs-db/products.json", "./src/other-dbs/fs-db/productIds.json", "./src/other-dbs/fs-db/deletedProducts.json", "producto");
+    CarritoDao = new ContenedorFS("./src/other-dbs/fs-db/carts.json", "./src/other-dbs/fs-db/cartIds.json", "./src/other-dbs/fs-db/deletedCarts.json", "carrito");
     ProductoDao.init("Productos")
     CarritoDao.init("Carritos")
 

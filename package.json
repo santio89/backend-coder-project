@@ -2,11 +2,11 @@
   "name": "backend-coder-project",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "./src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "devStart": "nodemon server.js --ignore ./other-dbs/*"
+    "start": "node .src/server.js",
+    "devStart": "nodemon .src/server.js --ignore ./other-dbs/*"
   },
   "keywords": [],
   "author": "",
