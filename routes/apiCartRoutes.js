@@ -1,13 +1,13 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {getAllProductsByCartId, postProductByCartId, postCart, deleteCartById, deleteProductByCartId} = require("../controllers/apiCartController");
+import { getAllProductsByCartId, postProductByCartId, postCart, deleteCartById, deleteProductByCartId } from "../controllers/apiCartController.js"
 
 /* ruteo */
 router.post("/", postCart)
 router.delete("/:id", deleteCartById)
 router.get("/:id/productos", getAllProductsByCartId)
-router.post("/:id/productos", postProductByCartId)
+router.post("/:id/productos/:id_prod", postProductByCartId)
 router.delete("/:id/productos/:id_prod", deleteProductByCartId)
 
 
-module.exports = router;
+export default router;

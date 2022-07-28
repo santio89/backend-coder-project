@@ -1,8 +1,7 @@
-/* contenedor principal de productos */
-const Contenedor = require("../Contenedor");
-const contenedorCarts = new Contenedor("./db/carts.json", "./db/cartIds.json", "./db/deletedCarts.json", "Carrito");
-const {contenedorProducts} = require("./apiProductController")
-contenedorCarts.init("Carritos");
+/* contenedor principal de carritos */
+import { contenedorProducts } from "./apiProductController.js"
+import { CarritoDao as contenedorCarts } from "../daos/index.js";
+
 
 /* add new cart */
 const postCart = async (req, res) => {
@@ -11,12 +10,7 @@ const postCart = async (req, res) => {
 
 /* empty cart */
 const emptyByCartId = async (req, res) => {
-    const index = contenedorCarts.products.findIndex(producto => producto.id == req.params.id)
-    if (index != -1) {
-        await contenedorCarts.emptyCartById(index, req.params.id);
-    } else {
-        res.json({ error: `No se encontró el cart con ID ${req.params.id}` })
-    }
+    res.json(await contenedorCarts.emptyCartById(req.params.id))
 }
 
 /* delete cart */
@@ -26,41 +20,28 @@ const deleteCartById = async (req, res) => {
 }
 
 /* get products from cart id */
-const getAllProductsByCartId = (req, res) => {
-    const index = contenedorCarts.products.findIndex(producto => producto.id == req.params.id)
-    if (index != -1) {
-        res.json(contenedorCarts.getAllByCartId(index))
-    } else {
-        res.json({ error: `No se encontró el cart con ID ${req.params.id}` })
-    }
+const getAllProductsByCartId = async (req, res) => {
+    res.json(await contenedorCarts.getAllByCartId(req.params.id))
 }
 
 /* add new product to cart */
 const postProductByCartId = async (req, res) => {
-    const index = contenedorCarts.products.findIndex(producto => producto.id == req.params.id)
-
-    if (index != -1) {
-        const product = contenedorProducts.getById(req.body.productId);
-        if (product.error){
-            res.status(400).json(product)
-        } else{
-            res.json(await contenedorCarts.saveByCartId(index, product))
+    try {
+        const producto = await contenedorProducts.getById(req.params.id_prod);
+        if (producto.error) {
+            res.json(producto)
+        } else {
+            res.json(await contenedorCarts.saveByCartId(req.params.id, producto, req.params.id_prod))
         }
-    } else {
-        res.json({ error: `No se encontró el cart con ID ${req.params.id}` })
+    } catch (err) {
+        console.log("Error guardando en carro: ", err)
     }
 }
 
 /* delete product from cart */
 const deleteProductByCartId = async (req, res) => {
-    const index = contenedorCarts.products.findIndex(producto => producto.id == req.params.id)
-
-    if (index != -1) {
-        res.json(await contenedorCarts.deleteByCartId(index, req.params.id_prod, req.params.id))
-    } else {
-        res.json({ error: `No se encontró el cart con ID ${id}` })
-    }
+    res.json(await contenedorCarts.deleteByCartId(req.params.id, req.params.id_prod))
 }
 
 
-module.exports = { contenedorCarts, getAllProductsByCartId, postProductByCartId, postCart, deleteCartById, deleteProductByCartId }
+export { contenedorCarts, getAllProductsByCartId, postProductByCartId, postCart, deleteCartById, deleteProductByCartId }

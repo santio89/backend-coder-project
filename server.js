@@ -1,7 +1,9 @@
-const express = require("express");
-const apiProductRoutes = require("./routes/apiProductRoutes")
-const apiCartRoutes = require("./routes/apiCartRoutes")
-require('dotenv').config()
+import express from "express";
+import {default as apiProductRoutes} from "./routes/apiProductRoutes.js"
+import {default as apiCartRoutes} from "./routes/apiCartRoutes.js"
+import dotenv from 'dotenv'
+dotenv.config()
+
 const port = process.env.PORT || 8080;
 const app = express();
 

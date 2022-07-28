@@ -1,4 +1,6 @@
-const fs = require("fs");
+import { default as fs } from "fs"
+
+console.log("Usando File System")
 
 class ContenedorProducts {
     constructor(productsFile, idsFile, deletedFile, type) {
@@ -13,7 +15,7 @@ class ContenedorProducts {
     /* guarda producto en contenedor productos, o guarda cart en contenedor carts */
     async save(objeto) {
         objeto.timestamp = Date.now();
-        objeto.objType?objeto.cartList=[]:[];
+        objeto.objType ? objeto.cartList = [] : [];
         try {
             /* busco id en archivo */
             if (this.productIds.length === 0) {
@@ -28,7 +30,7 @@ class ContenedorProducts {
             this.products.push(objeto)
             await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
             console.log("Producto cargado");
-           
+
             return objeto;
         } catch (err) {
             console.log("Error guardando producto. Code: ", err);
@@ -113,56 +115,56 @@ class ContenedorProducts {
     }
 
     /* retorna todos los productos del carro */
-    getAllByCartId(index){
-        return(this.products[index].cartList)
+    getAllByCartId(index) {
+        return (this.products[index].cartList)
     }
 
     /* guarda producto en carro */
-    async saveByCartId(index, product){
+    async saveByCartId(index, product) {
         this.products[index].cartList.push(product);
-        
-        try{
+
+        try {
             await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
             return product
-        } catch(err){
+        } catch (err) {
             console.log("Error guardando producto en carrito: ", err)
         }
-        
+
     }
 
     /* elimina producto de carro */
-    async deleteByCartId(indexCart, id, cartId){
-        const index = this.products[indexCart].cartList.findIndex(producto=>producto.id == id);
-        
-        if (index != -1){
+    async deleteByCartId(indexCart, id, cartId) {
+        const index = this.products[indexCart].cartList.findIndex(producto => producto.id == id);
+
+        if (index != -1) {
             this.products[indexCart].cartList.splice(index, 1);
-            try{
+            try {
                 await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
-                return {success: `Producto de ID ${id} eliminado del carrito de ID ${cartId}` }
-            } catch(err){
-                console.log("Error eliminando producto de carrito: ",err)
+                return { success: `Producto de ID ${id} eliminado del carrito de ID ${cartId}` }
+            } catch (err) {
+                console.log("Error eliminando producto de carrito: ", err)
             }
-        } else{
-            return {error: `Producto de ID ${id} no encontrado en el carrito de ID ${cartId}`}
+        } else {
+            return { error: `Producto de ID ${id} no encontrado en el carrito de ID ${cartId}` }
         }
-        try{
+        try {
             await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
             return product
-        } catch(err){
+        } catch (err) {
             console.log("Error guardando producto en carrito: ", err)
         }
-        
+
     }
 
-    async emptyCartById(index, id){
+    async emptyCartById(index, id) {
         /* aqui podria hacer un loop for del cartList para retornar el stock, antes de vaciar el array */
         this.products[index].cartList = []
 
-        try{
+        try {
             await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
-            
-            return {success: `Carrito de id ${id} vaciado` }
-        } catch(err){
+
+            return { success: `Carrito de id ${id} vaciado` }
+        } catch (err) {
             console.log("Error vaciando carrito, ", err)
         }
     }
@@ -180,4 +182,4 @@ class ContenedorProducts {
     }
 }
 
-module.exports = ContenedorProducts;
+export default ContenedorProducts;

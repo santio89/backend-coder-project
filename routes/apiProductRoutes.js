@@ -1,15 +1,15 @@
-const express = require("express");
-const router = express.Router();
-const {getProductById, postProduct, putProduct, deleteProductById} = require("../controllers/apiProductController");
-const checkAdminUtil = require("../utils/checkAdmin")
+import express from "express";
+import { getProductById, postProduct, putProduct, deleteProductById } from "../controllers/apiProductController.js"
+import { default as checkAdminUtil } from "../utils/checkAdmin.js"
 
 const ADMIN = true;
 const checkAdmin = checkAdminUtil(ADMIN);
+const router = express.Router();
 
 /* ruteo */
-router.get("/:id?", getProductById) 
+router.get("/:id?", getProductById)
 router.post("/", checkAdmin, postProduct)
 router.put("/:id", checkAdmin, putProduct)
 router.delete("/:id", checkAdmin, deleteProductById)
 
-module.exports = router;
+export default router;

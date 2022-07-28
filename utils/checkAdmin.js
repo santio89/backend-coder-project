@@ -1,5 +1,4 @@
 const checkAdmin = (admin)=>{
-
     return ((req,res,next)=>{
         if (admin === true){
             next();
@@ -9,4 +8,4 @@ const checkAdmin = (admin)=>{
     })
 }
 
-module.exports = checkAdmin;
+export default checkAdmin;
