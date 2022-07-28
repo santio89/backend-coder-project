@@ -18,6 +18,7 @@ switch (process.env.DATABASE) {
     CarritoDao = new CarritoDaoFirebase();
 
     break;
+
   case "MONGO":
     const { default: ProductoDaoMongo } = await import(
       "./productos/productoDaoMongo.js"
@@ -28,6 +29,15 @@ switch (process.env.DATABASE) {
 
     ProductoDao = new ProductoDaoMongo();
     CarritoDao = new CarritoDaoMongo();
+
+    break;
+
+  case 'FS':
+    const { default: ContenedorFS } = await import("../contenedores/ContenedorFS.js")
+    ProductoDao = new ContenedorFS("./fs-db/products.json", "./fs-db/productIds.json", "./fs-db/deletedProducts.json", "producto");
+    CarritoDao = new ContenedorFS("./fs-db/carts.json", "./fs-db/cartIds.json", "./fs-db/deletedCarts.json", "carrito");
+    ProductoDao.init("Productos")
+    CarritoDao.init("Carritos")
 
     break;
 }

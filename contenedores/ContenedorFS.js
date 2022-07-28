@@ -1,3 +1,4 @@
+import { timeStamp } from "console";
 import { default as fs } from "fs"
 
 console.log("Usando File System")
@@ -15,7 +16,7 @@ class ContenedorProducts {
     /* guarda producto en contenedor productos, o guarda cart en contenedor carts */
     async save(objeto) {
         objeto.timestamp = Date.now();
-        objeto.objType ? objeto.cartList = [] : [];
+        objeto.objType === "cart" ? objeto.cartList = [] : [];
         try {
             /* busco id en archivo */
             if (this.productIds.length === 0) {
@@ -39,7 +40,7 @@ class ContenedorProducts {
 
     /* actualiza producto en contenedor productos */
     async saveById(id, objeto) {
-        const index = this.products.findIndex(producto => producto.id === id)
+        const index = this.products.findIndex(producto => producto.id == id)
         if (index != -1) {
             objeto.timestamp = Date.now();
             objeto.id = id;
@@ -59,7 +60,7 @@ class ContenedorProducts {
 
     /* retorna producto del contenedor productos, o retorna cart del contenedor carts */
     getById(id) {
-        const objeto = this.products.find(producto => producto.id === id);
+        const objeto = this.products.find(producto => producto.id == id);
         return (objeto ? objeto : { error: `Producto con ID ${id} no encontrado` });
     }
 
@@ -70,7 +71,7 @@ class ContenedorProducts {
 
     /* eliminar un producto del contenedor productos, elimina un cart del contenedor carts */
     async deleteById(id) {
-        const index = this.products.findIndex(producto => producto.id === id)
+        const index = this.products.findIndex(producto => producto.id == id)
         if (index != -1) {
             const removedItem = this.products.splice(index, 1)[0];
             let removedItems = []
@@ -115,57 +116,81 @@ class ContenedorProducts {
     }
 
     /* retorna todos los productos del carro */
-    getAllByCartId(index) {
-        return (this.products[index].cartList)
+    getAllByCartId(cartId) {
+        const index = this.products.findIndex(producto => producto.id == cartId)
+
+        if (index != -1) {
+            return (this.products[index]?.cartList)
+        } else {
+            return { error: `carrito de id ${cartId} no encontrado` }
+        }
     }
 
     /* guarda producto en carro */
-    async saveByCartId(index, product) {
-        this.products[index].cartList.push(product);
+    async saveByCartId(cartId, product) {
+        const index = this.products.findIndex(producto => producto.id == cartId)
 
-        try {
-            await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
-            return product
-        } catch (err) {
-            console.log("Error guardando producto en carrito: ", err)
+        if (index != -1) {
+            this.products[index].cartList.push(product);
+
+            try {
+                await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
+                return product
+            } catch (err) {
+                console.log("Error guardando producto en carrito: ", err)
+            }
+        } else {
+            return { error: `carrito de id ${cartId} no encontrado` }
         }
-
     }
 
     /* elimina producto de carro */
-    async deleteByCartId(indexCart, id, cartId) {
-        const index = this.products[indexCart].cartList.findIndex(producto => producto.id == id);
+    async deleteByCartId(cartId, prodId) {
+        const cartIndex = this.products.findIndex(producto => producto.id == cartId)
 
-        if (index != -1) {
-            this.products[indexCart].cartList.splice(index, 1);
+        if (cartIndex != -1) {
+            const index = this.products[cartIndex].cartList.findIndex(producto => producto.id == prodId);
+
+            if (index != -1) {
+                this.products[cartIndex].cartList.splice(index, 1);
+                try {
+                    await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
+                    return { success: `Producto de ID ${prodId} eliminado del carrito de ID ${cartId}` }
+                } catch (err) {
+                    console.log("Error eliminando producto de carrito: ", err)
+                }
+            } else {
+                return { error: `Producto de ID ${prodId} no encontrado en el carrito de ID ${cartId}` }
+            }
             try {
-                await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
-                return { success: `Producto de ID ${id} eliminado del carrito de ID ${cartId}` }
+                await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
+                return product
             } catch (err) {
-                console.log("Error eliminando producto de carrito: ", err)
+                console.log("Error guardando producto en carrito: ", err)
             }
         } else {
-            return { error: `Producto de ID ${id} no encontrado en el carrito de ID ${cartId}` }
+            return { error: `carrito de id ${cartId} no encontrado` }
         }
-        try {
-            await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
-            return product
-        } catch (err) {
-            console.log("Error guardando producto en carrito: ", err)
-        }
+
 
     }
 
-    async emptyCartById(index, id) {
+    async emptyCartById(cartId) {
         /* aqui podria hacer un loop for del cartList para retornar el stock, antes de vaciar el array */
-        this.products[index].cartList = []
+        const index = this.products.findIndex(producto => producto.id == cartId)
 
-        try {
-            await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
+        if (index != -1) {
+            this.products[index].cartList = []
 
-            return { success: `Carrito de id ${id} vaciado` }
-        } catch (err) {
-            console.log("Error vaciando carrito, ", err)
+            try {
+                await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
+    
+                return { success: `Carrito de id ${cartId} vaciado` }
+            } catch (err) {
+                console.log("Error vaciando carrito, ", err)
+            }
+        } else {
+            return { error: `carrito de id ${cartId} no encontrado` }
         }
     }
 
