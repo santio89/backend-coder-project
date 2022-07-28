@@ -4,7 +4,7 @@ dotenv.config();
 let ProductoDao;
 let CarritoDao;
 
-switch (process.env.DATABASE) {
+switch (process.env.DATABASE.toUpperCase()) {
 
   case "FIREBASE":
     const { default: ProductoDaoFirebase } = await import(
