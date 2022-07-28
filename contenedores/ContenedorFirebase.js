@@ -20,7 +20,7 @@ class ContenedorFirebase {
         try {
             await this.collection.doc().create(objeto)
 
-            return { success: `Cargado correctamente` };
+            return { success: `cargado correctamente` };
         } catch (err) {
             console.log("error guardando. Code: ", err);
         }
@@ -30,10 +30,10 @@ class ContenedorFirebase {
     async saveById(id, objeto) {
         try {
             await this.collection.doc(id).update(objeto)
-            return { success: `Producto con id ${id} actualizado` }
+            return { success: `producto con id ${id} actualizado` }
         } catch (err) {
             if (err.code === 5) {
-                return { error: `Producto de id ${id} no encontrado` }
+                return { error: `producto de id ${id} no encontrado` }
             } else {
                 console.log("error actualizando producto por id. Code: ", err)
             }
@@ -44,7 +44,7 @@ class ContenedorFirebase {
     async getById(id) {
         try {
             const object = await this.collection.doc(id).get()
-            return (object && object.data() ? object.data() : { error: `Producto de id ${id} no encontrado` });
+            return (object && object.data() ? object.data() : { error: `producto de id ${id} no encontrado` });
 
         } catch (err) {
             console.log("error buscando producto por id: ", err)
@@ -72,11 +72,11 @@ class ContenedorFirebase {
     async deleteById(id) {
         try {
             await this.collection.doc(id).delete({ exists: true })
-            return { success: `Producto de id ${id} eliminado` }
+            return { success: `producto de id ${id} eliminado` }
 
         } catch (err) {
             if (err.code === 5) {
-                return { error: `Producto de id ${id} no encontrado` }
+                return { error: `producto de id ${id} no encontrado` }
             }
             console.log("error buscando producto por id: ", err)
         }
@@ -100,7 +100,8 @@ class ContenedorFirebase {
     /* retorna todos los productos del carro */
     async getAllByCartId(id) {
         const cart = await this.collection.doc(id).get()
-        return (cart?.productos?.length > 0 ? cart.productos : [])
+        const cartData = cart.data();
+        return (cartData.productos?.length > 0 ? cartData.productos : [])
     }
 
     /* guarda producto en carro */
@@ -108,14 +109,14 @@ class ContenedorFirebase {
         try {
             const objetoCart = await this.getById(cartId);
             if (objetoCart.error) {
-                return { error: `Carrito de id ${cartId} no encontrado` }
+                return { error: `carrito de id ${cartId} no encontrado` }
             } else {
                 producto._id = prodId;
                 objetoCart.productos?objetoCart.productos.push(producto):objetoCart.productos=[];
                 
                 try {
                     await this.collection.doc(cartId).update(objetoCart)
-                    return { success: `Producto de id ${prodId} agregado al cart de id ${cartId}` }
+                    return { success: `producto de id ${prodId} agregado al cart de id ${cartId}` }
                 } catch (err) {
                     console.log("error guardando producto en carrito: ", err)
                 }
@@ -131,7 +132,7 @@ class ContenedorFirebase {
             const cart = await this.getById(cartId)
 
             if (cart.error) {
-                return { error: `Carrito de id ${cartId} no encontrado` }
+                return { error: `carrito de id ${cartId} no encontrado` }
             } else {
                 cart.productos = [] && cart.productos
                 const index = cart.productos.findIndex(producto => producto._id == prodId);
@@ -141,12 +142,12 @@ class ContenedorFirebase {
 
                     try {
                         await this.collection.doc(cartId).update({productos: cart.productos})
-                        return { success: `Producto de ID ${prodId} eliminado del carrito de ID ${cartId}` }
+                        return { success: `producto de id ${prodId} eliminado del carrito de id ${cartId}` }
                     } catch (err) {
                         console.log("error eliminando producto del carrito: ", err)
                     }
                 } else {
-                    return { error: `Producto de ID ${prodId} no encontrado en el carrito de ID ${cartId}` }
+                    return { error: `producto de id ${prodId} no encontrado en el carrito de id ${cartId}` }
                 }
             }
         } catch (err) {
@@ -159,13 +160,13 @@ class ContenedorFirebase {
         try {
             const objetoCart = await this.getById(id);
             if (objetoCart.error) {
-                return { error: `Carrito de id ${cartId} no encontrado` }
+                return { error: `carrito de id ${cartId} no encontrado` }
             } else {
                 objetoCart.productos=[];
                 
                 try {
                     await this.collection.doc(id).update(objetoCart)
-                    return { success: `Carrito de id ${id} vaciado` }
+                    return { success: `carrito de id ${id} vaciado` }
                 } catch (err) {
                     console.log("error vaciando carrito: ", err)
                 }

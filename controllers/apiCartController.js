@@ -15,6 +15,10 @@ const deleteCartById = async (req, res) => {
     res.json(await contenedorCarts.deleteById(req.params.id));
 }
 
+const getAllCarts = async (req, res) => {
+    res.json(await contenedorCarts.getAll());
+}
+
 /* get products from cart id */
 const getAllProductsByCartId = async (req, res) => {
     res.json(await contenedorCarts.getAllByCartId(req.params.id))
@@ -40,4 +44,4 @@ const deleteProductByCartId = async (req, res) => {
 }
 
 
-export { contenedorCarts, getAllProductsByCartId, postProductByCartId, postCart, deleteCartById, deleteProductByCartId }
+export { contenedorCarts, getAllCarts, getAllProductsByCartId, postProductByCartId, postCart, deleteCartById, deleteProductByCartId }

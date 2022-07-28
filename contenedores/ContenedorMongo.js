@@ -16,7 +16,7 @@ class ContenedorMongo {
 
         try {
             const obj = await objetoModel.save()
-            return { success: `Cargado con id ${obj._id}` };
+            return { success: `cargado con id ${obj._id}` };
         } catch (err) {
             console.log("error guardando. Code: ", err);
         }
@@ -31,16 +31,16 @@ class ContenedorMongo {
 
         try {
             await objetoModel.save();
-            return { success: `Producto con id ${id} actualizado` }
+            return { success: `producto con id ${id} actualizado` }
         } catch (err) {
-            return {error: "Producto no encontrado o Schema invalido. Ingresar ID correctamente y seguir Schema (nombre, precio, thumbnail)"}
+            return {error: "producto no encontrado o Schema invalido. Ingresar id correctamente y seguir Schema (nombre, precio, thumbnail)"}
 
           /*   console.log(err["errors"])
             switch(err["errors"]){
                 case 'required':
                     return {error: "Seguir Schema: 'nombre, precio, thumbnail'"}
                 case 'ObjectId':
-                    return {error: `Producto de id ${id} no encontrado`}
+                    return {error: `producto de id ${id} no encontrado`}
                 default: 
                     console.log("error actualizando producto por id. Code: ", err)
             } */
@@ -113,13 +113,13 @@ class ContenedorMongo {
         try {
             const objetoCart = await this.getById(cartId);
             if (objetoCart.error) {
-                return { error: `Carrito de id ${cartId} no encontrado` }
+                return { error: `carrito de id ${cartId} no encontrado` }
             } else {
                 objetoCart.productos.push(producto);
                 const objetoModel = new this.collection(objetoCart)
                 try {
                     await objetoModel.save();
-                    return { success: `Producto de id ${producto._id} agregado al cart de id ${cartId}` }
+                    return { success: `producto de id ${producto._id} agregado al cart de id ${cartId}` }
                 } catch (err) {
                     console.log("error guardando producto en carrito: ", err)
                 }
@@ -135,7 +135,7 @@ class ContenedorMongo {
             const cart = await this.getById(cartId)
 
             if (cart.error) {
-                return { error: `Carrito de id ${cartId} no encontrado` }
+                return { error: `carrito de id ${cartId} no encontrado` }
             } else {
                 const productos = [] && cart.productos;
                 const index = productos.findIndex(producto => producto._id == prodId);
@@ -148,12 +148,12 @@ class ContenedorMongo {
 
                     try {
                         await objetoModel.save()
-                        return { success: `Producto de ID ${prodId} eliminado del carrito de ID ${cartId}` }
+                        return { success: `producto de id ${prodId} eliminado del carrito de id ${cartId}` }
                     } catch (err) {
                         console.log("error eliminando producto del carrito: ", err)
                     }
                 } else {
-                    return { error: `Producto de ID ${prodId} no encontrado en el carrito de ID ${cartId}` }
+                    return { error: `producto de id ${prodId} no encontrado en el carrito de id ${cartId}` }
                 }
             }
         } catch(err){
@@ -166,13 +166,13 @@ class ContenedorMongo {
         try {
             const cart = await this.getById(id);
             if (cart.error) {
-                return { error: `Carrito de id ${id} no encontrado` }
+                return { error: `carrito de id ${id} no encontrado` }
             } else {
                 cart.productos = [];
                 const objetoModel = new this.collection(cart)
                 try {
                     await objetoModel.save();
-                    return { success: `Carrito de id ${id} vaciado` }
+                    return { success: `carrito de id ${id} vaciado` }
                 } catch (err) {
                     console.log("error vaciando carrito: ", err)
                 }

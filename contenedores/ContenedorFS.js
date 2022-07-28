@@ -30,11 +30,11 @@ class ContenedorProducts {
             await fs.promises.writeFile(this.productIdsFile, JSON.stringify(this.productIds));
             this.products.push(objeto)
             await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
-            console.log("Producto cargado");
+            console.log("producto cargado");
 
             return objeto;
         } catch (err) {
-            console.log("Error guardando producto. Code: ", err);
+            console.log("error guardando producto. Code: ", err);
         }
     }
 
@@ -49,19 +49,19 @@ class ContenedorProducts {
             try {
                 await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
             } catch (err) {
-                console.log("Error guardando producto por ID. Code: ", err)
+                console.log("error guardando producto por id. Code: ", err)
             }
 
             return this.products[index];
         } else {
-            return { error: `Producto con ID ${id} no encontrado` }
+            return { error: `producto con id ${id} no encontrado` }
         }
     }
 
     /* retorna producto del contenedor productos, o retorna cart del contenedor carts */
     getById(id) {
         const objeto = this.products.find(producto => producto.id == id);
-        return (objeto ? objeto : { error: `Producto con ID ${id} no encontrado` });
+        return (objeto ? objeto : { error: `producto con id ${id} no encontrado` });
     }
 
     /* retorna todos los productos del contenedor productos */
@@ -85,12 +85,12 @@ class ContenedorProducts {
                 if (err.code === 'ENOENT') {
                     await fs.promises.writeFile(this.deletedFile, JSON.stringify([removedItem]));
                 } else {
-                    console.log("Error eliminando por ID. Code: ", err)
+                    console.log("error eliminando por id. Code: ", err)
                 }
             }
-            return { success: `${this.type} con ID ${id} eliminado` }
+            return { success: `${this.type} con id ${id} eliminado` }
         } else {
-            return { error: `${this.type} con ID ${id} no encontrado` }
+            return { error: `${this.type} con id ${id} no encontrado` }
         }
     }
 
@@ -109,10 +109,10 @@ class ContenedorProducts {
             if (err.code === 'ENOENT') {
                 await fs.promises.writeFile(this.deletedFile, JSON.stringify([removedItem]));
             } else {
-                console.log("Error eliminando por ID. Code: ", err)
+                console.log("error eliminando por id. Code: ", err)
             }
         }
-        return { success: `Producto con ID ${id} eliminado` }
+        return { success: `producto con id ${id} eliminado` }
     }
 
     /* retorna todos los productos del carro */
@@ -137,7 +137,7 @@ class ContenedorProducts {
                 await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
                 return product
             } catch (err) {
-                console.log("Error guardando producto en carrito: ", err)
+                console.log("error guardando producto en carrito: ", err)
             }
         } else {
             return { error: `carrito de id ${cartId} no encontrado` }
@@ -155,18 +155,18 @@ class ContenedorProducts {
                 this.products[cartIndex].cartList.splice(index, 1);
                 try {
                     await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
-                    return { success: `Producto de ID ${prodId} eliminado del carrito de ID ${cartId}` }
+                    return { success: `producto de id ${prodId} eliminado del carrito de id ${cartId}` }
                 } catch (err) {
-                    console.log("Error eliminando producto de carrito: ", err)
+                    console.log("error eliminando producto de carrito: ", err)
                 }
             } else {
-                return { error: `Producto de ID ${prodId} no encontrado en el carrito de ID ${cartId}` }
+                return { error: `producto de id ${prodId} no encontrado en el carrito de id ${cartId}` }
             }
             try {
                 await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products));
                 return product
             } catch (err) {
-                console.log("Error guardando producto en carrito: ", err)
+                console.log("error guardando producto en carrito: ", err)
             }
         } else {
             return { error: `carrito de id ${cartId} no encontrado` }
@@ -185,9 +185,9 @@ class ContenedorProducts {
             try {
                 await fs.promises.writeFile(this.productsFile, JSON.stringify(this.products))
     
-                return { success: `Carrito de id ${cartId} vaciado` }
+                return { success: `carrito de id ${cartId} vaciado` }
             } catch (err) {
-                console.log("Error vaciando carrito, ", err)
+                console.log("error vaciando carrito, ", err)
             }
         } else {
             return { error: `carrito de id ${cartId} no encontrado` }
@@ -202,7 +202,7 @@ class ContenedorProducts {
 
             console.log(`${items} cargados`);
         } catch (err) {
-            console.log(`Error cargando ${items}. Code: `, err);
+            console.log(`error cargando ${items}. Code: `, err);
         }
     }
 }
