@@ -18,9 +18,8 @@ class ContenedorFirebase {
         objeto.timestamp = Date.now();
 
         try {
-            await this.collection.doc().create(objeto)
-
-            return { success: `cargado correctamente` };
+            const res = await this.collection.add(objeto)
+            return { success: `cargado con id ${res.id}` };
         } catch (err) {
             console.log("error guardando. Code: ", err);
         }
