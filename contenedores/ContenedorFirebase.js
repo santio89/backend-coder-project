@@ -22,7 +22,7 @@ class ContenedorFirebase {
 
             return { success: `Cargado correctamente` };
         } catch (err) {
-            console.log("Error guardando. Code: ", err);
+            console.log("error guardando. Code: ", err);
         }
     }
 
@@ -35,7 +35,7 @@ class ContenedorFirebase {
             if (err.code === 5) {
                 return { error: `Producto de id ${id} no encontrado` }
             } else {
-                console.log("Error actualizando producto por id. Code: ", err)
+                console.log("error actualizando producto por id. Code: ", err)
             }
         }
     }
@@ -47,7 +47,7 @@ class ContenedorFirebase {
             return (object && object.data() ? object.data() : { error: `Producto de id ${id} no encontrado` });
 
         } catch (err) {
-            console.log("Error buscando producto por id: ", err)
+            console.log("error buscando producto por id: ", err)
         }
     }
 
@@ -78,7 +78,7 @@ class ContenedorFirebase {
             if (err.code === 5) {
                 return { error: `Producto de id ${id} no encontrado` }
             }
-            console.log("Error buscando producto por id: ", err)
+            console.log("error buscando producto por id: ", err)
         }
     }
 
@@ -93,7 +93,7 @@ class ContenedorFirebase {
             return { success: "collecion vaciada" }
 
         } catch (err) {
-            console.log("Error vaciando coleccion: ", err)
+            console.log("error vaciando coleccion: ", err)
         }
     }
 
@@ -117,11 +117,11 @@ class ContenedorFirebase {
                     await this.collection.doc(cartId).update(objetoCart)
                     return { success: `Producto de id ${prodId} agregado al cart de id ${cartId}` }
                 } catch (err) {
-                    console.log("Error guardando producto en carrito: ", err)
+                    console.log("error guardando producto en carrito: ", err)
                 }
             }
         } catch (err) {
-            console.log("Error guardando en carrito: ", err)
+            console.log("error guardando en carrito: ", err)
         }
     }
 
@@ -143,14 +143,14 @@ class ContenedorFirebase {
                         await this.collection.doc(cartId).update({productos: cart.productos})
                         return { success: `Producto de ID ${prodId} eliminado del carrito de ID ${cartId}` }
                     } catch (err) {
-                        console.log("Error eliminando producto del carrito: ", err)
+                        console.log("error eliminando producto del carrito: ", err)
                     }
                 } else {
                     return { error: `Producto de ID ${prodId} no encontrado en el carrito de ID ${cartId}` }
                 }
             }
         } catch (err) {
-            console.log("Error eliminando producto del carrito: ", err)
+            console.log("error eliminando producto del carrito: ", err)
         }
     }
 
@@ -167,11 +167,11 @@ class ContenedorFirebase {
                     await this.collection.doc(id).update(objetoCart)
                     return { success: `Carrito de id ${id} vaciado` }
                 } catch (err) {
-                    console.log("Error vaciando carrito: ", err)
+                    console.log("error vaciando carrito: ", err)
                 }
             }
         } catch (err) {
-            console.log("Error vaciando carrito: ", err)
+            console.log("error vaciando carrito: ", err)
         }
     }
 }

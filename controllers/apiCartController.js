@@ -8,15 +8,11 @@ const postCart = async (req, res) => {
     res.json(await contenedorCarts.save({ objType: "cart" }))
 }
 
-/* empty cart */
-const emptyByCartId = async (req, res) => {
-    res.json(await contenedorCarts.emptyCartById(req.params.id))
-}
-
 /* delete cart */
 const deleteCartById = async (req, res) => {
-    await emptyByCartId(req, res);
-    res.json(await contenedorCarts.deleteById(Number(req.params.id)));
+    /* empty cart first */
+    await contenedorCarts.emptyCartById(req.params.id);
+    res.json(await contenedorCarts.deleteById(req.params.id));
 }
 
 /* get products from cart id */
