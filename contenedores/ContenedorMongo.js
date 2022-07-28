@@ -64,7 +64,7 @@ class ContenedorMongo {
 
     }
 
-    /* retorna todos los productos del contenedor productos */
+    /* retorna todos los productos del contenedor productos, o retorna todos los carts del contenedor carts */
     async getAll() {
         try{
             const objetos = await this.collection.find({}, { __v: 0 })
@@ -74,7 +74,7 @@ class ContenedorMongo {
         }
     }
 
-    /* eliminar un producto del contenedor productos, elimina un cart del contenedor carts */
+    /* elimina un producto del contenedor productos, o elimina un cart del contenedor carts */
     async deleteById(id) {
         try {
             const validUserId = mongoose.isValidObjectId(id);
@@ -89,7 +89,7 @@ class ContenedorMongo {
         }
     }
 
-    /* eliminar productos del contenedor productos*/
+    /* elimina productos del contenedor productos*/
     async deleteAll() {
         try {
             await this.collection.deleteMany({})
@@ -156,7 +156,6 @@ class ContenedorMongo {
         } catch(err){
             console.log("Error eliminando producto del carrito: ",err)
         }
-        
     }
 
     /* vacia carro */

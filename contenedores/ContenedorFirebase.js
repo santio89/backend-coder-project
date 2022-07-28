@@ -51,7 +51,7 @@ class ContenedorFirebase {
         }
     }
 
-    /* retorna todos los productos del contenedor productos */
+    /* retorna todos los productos del contenedor productos, o retorna todos los carts del contenedor carts */
     async getAll() {
         try {
             const objetos = await this.collection.get()
@@ -68,7 +68,7 @@ class ContenedorFirebase {
         }
     }
 
-    /* eliminar un producto del contenedor productos, elimina un cart del contenedor carts */
+    /* elimina un producto del contenedor productos, o elimina un cart del contenedor carts */
     async deleteById(id) {
         try {
             await this.collection.doc(id).delete({ exists: true })
@@ -82,7 +82,7 @@ class ContenedorFirebase {
         }
     }
 
-    /* eliminar productos del contenedor productos*/
+    /* elimina productos del contenedor productos*/
     async deleteAll() {
         try {
             const productos = await this.getAll()
@@ -154,6 +154,7 @@ class ContenedorFirebase {
         }
     }
 
+    /* vacia carro */
     async emptyCartById(id) {
         try {
             const objetoCart = await this.getById(id);
