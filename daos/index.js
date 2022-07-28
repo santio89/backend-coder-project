@@ -34,8 +34,8 @@ switch (process.env.DATABASE) {
 
   case 'FS':
     const { default: ContenedorFS } = await import("../contenedores/ContenedorFS.js")
-    ProductoDao = new ContenedorFS("./fs-db/products.json", "./fs-db/productIds.json", "./fs-db/deletedProducts.json", "producto");
-    CarritoDao = new ContenedorFS("./fs-db/carts.json", "./fs-db/cartIds.json", "./fs-db/deletedCarts.json", "carrito");
+    ProductoDao = new ContenedorFS("./other-dbs/fs-db/products.json", "./other-dbs/fs-db/productIds.json", "./other-dbs/fs-db/deletedProducts.json", "producto");
+    CarritoDao = new ContenedorFS("./other-dbs/fs-db/carts.json", "./other-dbs/fs-db/cartIds.json", "./other-dbs/fs-db/deletedCarts.json", "carrito");
     ProductoDao.init("Productos")
     CarritoDao.init("Carritos")
 
